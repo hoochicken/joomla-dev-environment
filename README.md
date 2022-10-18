@@ -39,7 +39,11 @@ docker-compose up
   * database server host name: `mariadb`
   * user name: `root`
   * password: `root`
-  * database name: `youtproject` (<= whatever is set in `.env` > DATABASE_NAME)
+  * database name: `yourproject` (<= whatever is set in `.env` > DATABASE_NAME)
+
+## Debugger
+
+You can use the common debugger in phpstorm to debug your peoject:-)
 
 ## Recommended step
 
