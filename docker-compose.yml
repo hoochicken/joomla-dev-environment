@@ -1,0 +1,132 @@
+version: "3.3"
+
+services:
+
+  traefik:
+    image: "traefik:v2.8.1"
+    container_name: "traefik"
+    command:
+      #- "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      # The HTTP port
+      - 80:80
+      # The Web UI (enabled by --api.insecure=true)
+      - 8080:8080
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    networks:
+      - lily2
+
+  whoami:
+    image: "traefik/whoami"
+    container_name: "simple-service"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.localhost`)"
+      - "traefik.http.routers.whoami.entrypoints=web"
+    networks:
+      - lily2
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb_c
+    environment:
+      MARIADB_ROOT_HOST: mariadb
+      # MARIADB_ROOT_PASSWORD is mandatory and specifies the password
+      # that will be set for the MySQL root superuser account.
+      MARIADB_ROOT_PASSWORD: root
+      # MARIADB_DATABASE is optional and allows you to specify the name of a database
+      # to be created on image startup. If a user/password was supplied (see below)
+      # then that user will be granted superuser access
+      # (corresponding to GRANT ALL) to this database.
+      MARIADB_DATABASE: ${DATABASE_NAME}
+      # MARIADB_USER and MARIADB_PASSWORD are optional,
+      # used in conjunction to create a new user and
+      # to set that user's password.
+      # This user will be granted superuser permissions (see above)
+      # for the database specified by the MYSQL_DATABASE variable.
+      # Both variables are required for a user to be created.
+      MARIADB_USER: ${DATABASE_USER}
+      MYSQL_USER: ${DATABASE_USER}
+      MARIADB_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - 3307:80
+    volumes:
+      - ./_dbdata:/var/lib/mysql
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mariadb.entrypoints=web"
+    networks:
+      - lily2      
+
+  sql:
+    image: phpmyadmin:latest
+    container_name: pma_c
+    ports:
+      - 8081:80
+    links:
+      - mariadb
+    environment:
+      PMA_HOST: mariadb
+    depends_on:
+      - mariadb
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sql.rule=Host(`sql.localhost`)"
+      - "traefik.http.routers.sql.entrypoints=web"
+    networks:
+      - lily2
+
+  yourproject:
+    build:
+      context: .
+    container_name: yourproject_c
+    volumes:
+      - .:/var/www/html
+    environment:
+      - "PHP_ENABLE_XDEBUG=1"
+      - "XDEBUG_CONFIG=idekey=PHPSTORM client_host=host.docker.internal xdebug.remote_port=9003 xdebug.discover_client_host=0 xdebug.start_with_request=yes xdebug.mode=develop,debug"
+      - "XDEBUG_MODE=develop,debug"
+      - "APACHE_DOCUMENT_ROOT=${DOCUMENT_ROOT}"
+      - "PHP_IDE_CONFIG=serverName=yourproject.localhost"
+    ports:
+      - 9014:80
+    depends_on:
+      - mariadb
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.yourproject.rule=Host(`yourproject.localhost`)"
+      - "traefik.http.routers.yourproject.entrypoints=web"
+    env_file:
+      - .env
+    networks:
+      - lily2
+
+  mail:
+    image: mailhog/mailhog
+    container_name: mailhog_c
+    ports:
+      - 1025:1025 # smtp server
+      - 8025:8025 # web ui
+    logging:
+      driver: 'none'  # disable saving logs
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.mailhog.loadbalancer.server.port=8025"
+      - "traefik.http.routers.mail.rule=Host(`mail.localhost`)"
+      - "traefik.http.routers.mail.entrypoints=web"
+    networks:
+      - lily2
+    volumes:
+      - ./:/var/www/html
+
+networks:
+  lily2:
+
+volumes:
+  _dbdata:
