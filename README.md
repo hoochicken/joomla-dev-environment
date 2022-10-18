@@ -43,7 +43,7 @@ docker-compose up
 
 ## Debugger
 
-You can use the common debugger in phpstorm to debug your peoject:-)
+You can use the common debugger in phpstorm to debug your project:-)
 
 ## Recommended step
 
