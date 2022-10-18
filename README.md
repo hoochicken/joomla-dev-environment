@@ -27,12 +27,19 @@ git clone git@github.com:hoochicken/joomla-dev-environment.git
 
 # move to your project
 # this will be the root folder
-# put your joomla files here
 cd yourproject
 
 # start environment
 docker-compose up
 ~~~
+
+* Go to <http://yourproject.localhost>
+* Install your joomla
+* Database settings
+  * database server host name: `mariadb`
+  * user name: `root`
+  * password: `root`
+  * database name: `youtproject` (<= whatever is set in `.env` > DATABASE_NAME)
 
 ## Recommended step
 
