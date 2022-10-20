@@ -1,6 +1,12 @@
 # Joomla! Development Environment
 
-This environment contains:
+This repository generated a development environment for the CMS Joomla! It's based on docker. 
+
+There is an xdebuggable container for the Joomla! application. The database is accessable via the phpmyadmin container. And there also is a mail container, that allows you to have a fullgrown e-mail sandbox.
+
+Enjoy :-)
+
+## Docker containers
 
 * traefik
   * available on <http://127.0.0.1:8080> 
@@ -14,6 +20,7 @@ This environment contains:
 * your project
   * available on <http://yourproject.localhost>
   * your Joomla! project
+  * apache 8.0 with xdebug
 
 ## Requirements
 
@@ -40,6 +47,10 @@ docker-compose up
   * user name: `root`
   * password: `root`
   * database name: `yourproject` (<= whatever is set in `.env` > DATABASE_NAME)
+
+## Changing Php Version
+
+As you can see in the Dockerfile: the base image is an apache 8.0. If you need another Version, just switch here to apache 8.1 or even back to 7.4.
 
 ## Debugger
 
