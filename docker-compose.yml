@@ -82,10 +82,11 @@ services:
     networks:
       - lily2
 
-  yourproject:
+  yourproject81:
     build:
       context: .
-    container_name: yourproject_c
+      dockerfile: ./_dockerfiles/php8.1/Dockerfile
+    container_name: yourproject81_c
     volumes:
       - .:/var/www/html
     environment:
@@ -93,15 +94,67 @@ services:
       - "XDEBUG_CONFIG=idekey=PHPSTORM client_host=host.docker.internal xdebug.remote_port=9003 xdebug.discover_client_host=0 xdebug.start_with_request=yes xdebug.mode=develop,debug"
       - "XDEBUG_MODE=develop,debug"
       - "APACHE_DOCUMENT_ROOT=${DOCUMENT_ROOT}"
-      - "PHP_IDE_CONFIG=serverName=yourproject.localhost"
+      - "PHP_IDE_CONFIG=serverName=yourproject81.localhost"
     ports:
       - 9014:80
     depends_on:
       - mariadb
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.yourproject.rule=Host(`yourproject.localhost`)"
-      - "traefik.http.routers.yourproject.entrypoints=web"
+      - "traefik.http.routers.yourproject81.rule=Host(`yourproject81.localhost`)"
+      - "traefik.http.routers.yourproject81.entrypoints=web"
+    env_file:
+      - .env
+    networks:
+      - lily2
+
+  yourproject80:
+    build:
+      context: .
+      dockerfile: ./_dockerfiles/php8.0/Dockerfile
+    container_name: yourproject80_c
+    volumes:
+      - .:/var/www/html
+    environment:
+      - "PHP_ENABLE_XDEBUG=1"
+      - "XDEBUG_CONFIG=idekey=PHPSTORM client_host=host.docker.internal xdebug.remote_port=9003 xdebug.discover_client_host=0 xdebug.start_with_request=yes xdebug.mode=develop,debug"
+      - "XDEBUG_MODE=develop,debug"
+      - "APACHE_DOCUMENT_ROOT=${DOCUMENT_ROOT}"
+      - "PHP_IDE_CONFIG=serverName=yourproject80.localhost"
+    ports:
+      - 9015:80
+    depends_on:
+      - mariadb
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.yourproject80.rule=Host(`yourproject80.localhost`)"
+      - "traefik.http.routers.yourproject80.entrypoints=web"
+    env_file:
+      - .env
+    networks:
+      - lily2
+
+  yourproject74:
+    build:
+      context: .
+      dockerfile: ./_dockerfiles/php7.4/Dockerfile
+    container_name: yourproject74_c
+    volumes:
+      - .:/var/www/html
+    environment:
+      - "PHP_ENABLE_XDEBUG=1"
+      - "XDEBUG_CONFIG=idekey=PHPSTORM client_host=host.docker.internal xdebug.remote_port=9003 xdebug.discover_client_host=0 xdebug.start_with_request=yes xdebug.mode=develop,debug"
+      - "XDEBUG_MODE=develop,debug"
+      - "APACHE_DOCUMENT_ROOT=${DOCUMENT_ROOT}"
+      - "PHP_IDE_CONFIG=serverName=yourproject74.localhost"
+    ports:
+      - 9016:80
+    depends_on:
+      - mariadb
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.yourproject74.rule=Host(`yourproject74.localhost`)"
+      - "traefik.http.routers.yourproject74.entrypoints=web"
     env_file:
       - .env
     networks:

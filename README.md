@@ -18,9 +18,11 @@ Enjoy :-)
   * available on <http://sql.localhost>
   * administration of database 
 * your project
-  * available on <http://yourproject.localhost>
+  * available on PHP 7.4 <http://yourproject74.localhost>
+  * available on PHP 8.0 <http://yourproject80.localhost>
+  * available on PHP 8.1 <http://yourproject81.localhost>
   * your Joomla! project
-  * apache 8.0 with xdebug
+  * apache with xdebug
 
 ## Requirements
 
