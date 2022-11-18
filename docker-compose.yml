@@ -88,7 +88,7 @@ services:
       dockerfile: ./_dockerfiles/php8.1/Dockerfile
     container_name: yourproject81_c
     volumes:
-      - .:/var/www/html
+      - .:${DOCUMENT_ROOT}
     environment:
       - "PHP_ENABLE_XDEBUG=1"
       - "XDEBUG_CONFIG=idekey=PHPSTORM client_host=host.docker.internal xdebug.remote_port=9003 xdebug.discover_client_host=0 xdebug.start_with_request=yes xdebug.mode=develop,debug"
@@ -114,7 +114,7 @@ services:
       dockerfile: ./_dockerfiles/php8.0/Dockerfile
     container_name: yourproject80_c
     volumes:
-      - .:/var/www/html
+      - .:${DOCUMENT_ROOT}
     environment:
       - "PHP_ENABLE_XDEBUG=1"
       - "XDEBUG_CONFIG=idekey=PHPSTORM client_host=host.docker.internal xdebug.remote_port=9003 xdebug.discover_client_host=0 xdebug.start_with_request=yes xdebug.mode=develop,debug"
@@ -140,7 +140,7 @@ services:
       dockerfile: ./_dockerfiles/php7.4/Dockerfile
     container_name: yourproject74_c
     volumes:
-      - .:/var/www/html
+      - .:${DOCUMENT_ROOT}
     environment:
       - "PHP_ENABLE_XDEBUG=1"
       - "XDEBUG_CONFIG=idekey=PHPSTORM client_host=host.docker.internal xdebug.remote_port=9003 xdebug.discover_client_host=0 xdebug.start_with_request=yes xdebug.mode=develop,debug"
